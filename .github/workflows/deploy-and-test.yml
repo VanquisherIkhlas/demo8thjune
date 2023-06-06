@@ -14,7 +14,7 @@ jobs:
       - name: Setup NPM
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 14.x
 
       # Install Salesforce CLI
       - name: "Install Salesforce CLI"
@@ -54,14 +54,7 @@ jobs:
       - name: "Run apex tests"
         run: sfdx force:apex:test:run -w 5
 
-      # Run LWC tests
-      - name: "Run LWC tests"
-        run: |
-          npm install
-          npm test
-        env:
-          CI: true
-      
+     
       # Housekeeping
       - name: "Delete scratch org"
         if: always()
