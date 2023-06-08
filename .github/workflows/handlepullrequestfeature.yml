@@ -1,11 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: HandlePullRequesttoMaster
+name: HandlePullRequesttoDemobranch
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   pull_request:
-    branches: master
+    branches: demobranch
    # Jobs to be executed
 jobs:
     pmd-run:
@@ -15,17 +15,19 @@ jobs:
             - name: 'Checkout source code'
               uses: actions/checkout@v2
 
-            # Install PMD
-            - name: 'Install PMD'
-              run: |
-                  PMD_VERSION=`cat pmd/pmd-version.txt`
-                  wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F$PMD_VERSION/pmd-bin-$PMD_VERSION.zip
-                  unzip pmd-bin-$PMD_VERSION.zip -d ~
-                  mv ~/pmd-bin-$PMD_VERSION ~/pmd
-                  ~/pmd/bin/run.sh pmd --version
             # Run PMD scan
             - name: 'Run PMD scan'
-              run: ~/pmd/bin/run.sh pmd -d force-app -R pmd/ruleset.xml -f text
+              uses: pmd/pmd-github-action@v1.4.0
+              id: pmd
+              with:
+                  version: '6.55.0'
+                  sourcePath: 'force-app'
+                  rulesets: 'ruleset.xml'
+
+            # Check for PMD violations
+            - name: 'Check for PMD violations'
+              if: steps.pmd.outputs.violations != 0
+              run: exit 1
     scratch-org-test:
         runs-on: ubuntu-latest        
         if: ${{ github.actor != 'dependabot[bot]' }}
