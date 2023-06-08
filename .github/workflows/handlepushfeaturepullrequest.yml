@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: PushToFeature
+name: HandlePushtoFeaturefile
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
@@ -28,6 +28,7 @@ jobs:
             - name: 'Check for PMD violations'
               if: steps.pmd.outputs.violations != 0
               run: exit 1
+            
     action-pull-request:
       runs-on: ubuntu-latest
       steps:
@@ -36,11 +37,23 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run the Action
-        if: startsWith(github.ref, 'refs/heads/demo')
+        if: startsWith(github.ref, 'refs/heads/feature')
         uses: devops-infra/action-pull-request@v0.4.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_SCOPED_TOKEN }}
         with:
-            github_token: ${{ secrets.REPO_SCOPED_TOKEN }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
             title: Automatic pull request                           
-            get_diff: true         
+            get_diff: true
+      #approve pull request      
+      - name: Approve Pull Request
+        uses: actions/checkout@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: 1
+     
+     #merge pull request    
+      - name: Merge Pull Request
+        uses: actions/checkout@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: 1
+          method: squash
