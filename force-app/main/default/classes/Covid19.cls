@@ -3,6 +3,7 @@ public class Covid19 {
     //adding comment
 
     //adding a comment fior test purpose 
+    //test
     public Integer recoveredInArea=0;
     public static Integer recoveredcountry=0;
     
