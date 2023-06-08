@@ -1,0 +1,59 @@
+# This is a basic workflow to help you get started with Actions
+
+name: HandlePushtoFeaturefile
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: demobranch
+   # Jobs to be executed
+jobs:
+    pmd-run:
+        runs-on: ubuntu-latest
+        steps:
+        # Checkout the source code
+            - name: 'Checkout source code'
+              uses: actions/checkout@v2
+
+            # Run PMD scan
+            - name: 'Run PMD scan'
+              uses: pmd/pmd-github-action@v1.4.0
+              id: pmd
+              with:
+                  version: '6.55.0'
+                  sourcePath: 'force-app'
+                  rulesets: 'ruleset.xml'
+
+            # Check for PMD violations
+            - name: 'Check for PMD violations'
+              if: steps.pmd.outputs.violations != 0
+              run: exit 1
+            
+    action-pull-request:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout repoistory
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Run the Action
+        if: startsWith(github.ref, 'refs/heads/feature')
+        uses: devops-infra/action-pull-request@v0.4.2
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            title: Automatic pull request                           
+            get_diff: true
+      #approve pull request      
+      - name: Approve Pull Request
+        uses: juliangruber/approve-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: 1
+     
+     #merge pull request    
+      - name: Merge Pull Request
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: 1
+          method: squash
