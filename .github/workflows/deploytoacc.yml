@@ -39,6 +39,6 @@ jobs:
               
             # Deploy source to Acc org
             - name: 'Push source to Acc org'
-              run: sfdx force:source:deploy -u ikhlas.a.shaikh@empathetic-otter-5cwsyo.com -p force-app/main/default
+              run: sfdx force:source:deploy -u ikhlas.a.shaikh@wise-bear-u47p5t.com -p force-app/main/default
 
    

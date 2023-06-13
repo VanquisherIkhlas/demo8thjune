@@ -7,6 +7,8 @@ public class Covid19 {
 //test1 
     //testing
     //uahgsu
+
+    //testing from one enviorment to another 
     public Integer recoveredInArea=0;
     public static Integer recoveredcountry=0;
     
