@@ -4,6 +4,7 @@
  * @author  Luke
  * @date    Aug 2012
  */
+//demo
 global class Cashflow implements Comparable {
 
     public Date cashflowDate { get; set; }
