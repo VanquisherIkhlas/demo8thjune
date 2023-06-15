@@ -6,10 +6,6 @@ public class Covid19 {
     //test
 //test1 
     //testing
-    //uahgsu
-//jgfhefhy
-    //testing from one enviorment to another 
-    //hsuasbh
     public Integer recoveredInArea=0;
     public static Integer recoveredcountry=0;
     
